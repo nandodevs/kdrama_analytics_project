@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    networks:
+      - airflow
+
+  redis:
+    image: redis:latest
+    networks:
+      - airflow
+
+  airflow-webserver:
+    image: apache/airflow:2.9.1
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
+      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__FERNET_KEY: ''
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      AIRFLOW__WEBSERVER__WORKERS: 2
+      _AIRFLOW_WWW_USER_USERNAME: Admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+    volumes:
+      - ./dags:/opt/airflow/dags         # Para as DAGs
+      - ./logs:/opt/airflow/logs         # Para os logs
+      - ./plugins:/opt/airflow/plugins   # Para os plugins
+      - ./requirements.txt:/opt/airflow/requirements.txt # Para instalar dependências
+      # --- Volumes CRUCIAIS para o seu projeto ---
+      - ./src:/opt/airflow/src_project    # Monta sua pasta local 'src' para '/opt/airflow/src_project' no container
+      - ./data:/opt/airflow/data_project 
+    ports:
+      - "8080:8080"
+    command: bash -c "airflow db upgrade && airflow webserver"
+    networks:
+      - airflow
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.1
+    depends_on:
+      - airflow-webserver
+    environment:
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
+      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_WEBSERVER_SECRET_KEY}
+    volumes:
+      - ./dags:/opt/airflow/dags         # Para as DAGs
+      - ./logs:/opt/airflow/logs         # Para os logs
+      - ./plugins:/opt/airflow/plugins   # Para os plugins
+      - ./requirements.txt:/opt/airflow/requirements.txt # Para instalar dependências
+      # --- Volumes CRUCIAIS para o seu projeto ---
+      - ./src:/opt/airflow/src_project    # Monta sua pasta local 'src' para '/opt/airflow/src_project' no container
+      - ./data:/opt/airflow/data_project 
+    command: bash -c "airflow db upgrade && airflow scheduler"
+    networks:
+      - airflow
+
+volumes:
+  postgres-db-volume:
+
+networks:
+  airflow:
