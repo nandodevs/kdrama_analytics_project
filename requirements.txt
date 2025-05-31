@@ -1,0 +1,17 @@
+# Core libraries for API interaction and data handling
+requests
+pandas
+
+# For managing environment variables (API keys, etc.) locally
+python-dotenv
+
+# For interactive development and notebooks (optional but recommended)
+jupyterlab
+
+# PySpark (para quando formos para o Databricks, mas bom ter listado)
+# Não instale pyspark localmente com pip se for usar principalmente no Databricks,
+# pois o Databricks já o provê. Adicione se for testar PySpark localmente.
+# pyspark
+
+# Para conectar com SQL Server (se for usar essa DB na camada Gold)
+# pyodbc # ou outro driver dependendo da sua necessidade
