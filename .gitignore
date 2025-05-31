@@ -114,9 +114,9 @@ local.settings.json
 # Data files (se forem muito grandes ou sensíveis)
 # Descomente se não quiser versionar os dados locais de exemplo.
 # Em um projeto real, os dados de Bronze/Silver/Gold estariam em um Data Lake.
-# data/bronze/
-# data/silver/
-# data/gold/
+data/bronze/
+data/silver/
+data/gold/
 
 # Logs
 logs/
