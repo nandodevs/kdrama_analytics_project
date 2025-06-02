@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .astro
+test_dag.py
 
 # C extensions
 *.so
