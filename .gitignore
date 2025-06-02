@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 .astro
 test_dag.py
+dags/exampledag.py
+src/create_user.py
+
 
 # C extensions
 *.so
