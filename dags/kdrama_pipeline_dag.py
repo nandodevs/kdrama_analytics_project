@@ -44,7 +44,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id="kdrama_pipeline_final_docker", # Novo ID para garantir que é a nova
+    dag_id="kdrama_pipeline_final", # Novo ID para garantir que é a nova
     default_args=default_args,
     description="Pipeline Kdrama (Bronze, Silver, Gold) Docker Final",
     schedule=None,
