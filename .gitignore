@@ -6,7 +6,7 @@ __pycache__/
 test_dag.py
 dags/exampledag.py
 src/create_user.py
-
+kdrama_dashboard/.streamlit/
 
 # C extensions
 *.so
