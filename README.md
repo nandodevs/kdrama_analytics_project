@@ -1,45 +1,128 @@
-Overview
-========
+# 📺 Análise de Kdramas: Um Pipeline de Dados End-to-End na Nuvem Azure
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+![Status do Projeto](https://img.shields.io/badge/status-concluído-brightgreen)
+![Licença](https://img.shields.io/badge/license-MIT-blue)
 
-Project Contents
-================
+## 📖 Visão Geral do Projeto
 
-Your Astro project contains the following files and folders:
+Este projeto demonstra a construção de um pipeline de dados completo, desde a ingestão de dados brutos de uma API pública até a criação de um dashboard interativo. O objetivo foi transformar dados sobre dramas coreanos (Kdramas) da API do [The Movie Database (TMDB)](https://www.themoviedb.org/) em um conjunto de dados analítico, estruturado e pronto para BI, utilizando uma arquitetura **Data Lakehouse** moderna na nuvem Microsoft Azure.
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://www.astronomer.io/docs/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+O resultado final é um dashboard interativo, construído com Streamlit e implantado na web, que permite a exploração e análise das tendências e popularidade dos Kdramas lançados nos últimos anos.
 
-Deploy Your Project Locally
-===========================
+## 🏛️ Arquitetura do Projeto
 
-Start Airflow on your local machine by running 'astro dev start'.
+A solução foi implementada seguindo a arquitetura Medalhão (Bronze, Silver, Gold), garantindo a qualidade, governança e rastreabilidade dos dados em cada etapa do processo.
 
-This command will spin up five Docker containers on your machine, each for a different Airflow component:
+"imagem"
 
-- Postgres: Airflow's Metadata Database
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- DAG Processor: The Airflow component responsible for parsing DAGs
-- API Server: The Airflow component responsible for serving the Airflow UI and API
-- Triggerer: The Airflow component responsible for triggering deferred tasks
 
-When all five containers are ready the command will open the browser to the Airflow UI at http://localhost:8080/. You should also be able to access your Postgres Database at 'localhost:5432/postgres' with username 'postgres' and password 'postgres'.
+## 🛠️ Tecnologias Utilizadas
 
-Note: If you already have either of the above ports allocated, you can either [stop your existing Docker containers or change the port](https://www.astronomer.io/docs/astro/cli/troubleshoot-locally#ports-are-not-available-for-my-local-airflow-webserver).
+* **Plataforma Cloud:** Microsoft Azure
+* **Armazenamento de Dados:**
+    * **Azure Data Lake Storage (ADLS) Gen2:** Para armazenar os dados nas camadas Bronze, Silver e Gold.
+    * **Delta Lake:** Formato de tabela para garantir confiabilidade e performance no Data Lake.
+    * **Azure SQL Database:** Atuando como Data Warehouse (camada de serviço) para o dashboard.
+* **Processamento de Dados:**
+    * **Azure Databricks:** Plataforma central para o desenvolvimento dos pipelines.
+    * **Apache Spark (PySpark):** Motor de processamento distribuído para as transformações de dados.
+    * **Pandas:** Usado para prototipação e manipulação de dados local.
+* **Segurança:**
+    * **Azure Key Vault:** Para gerenciamento seguro de segredos (chaves de API, senhas de banco de dados).
+* **Governança:**
+    * **Unity Catalog (Databricks):** Para gerenciar o acesso aos dados no Data Lake.
+* **Visualização de Dados e Aplicação Web:**
+    * **Streamlit:** Para a construção e deploy do dashboard interativo.
+    * **Power BI:** Alternativa de ferramenta de BI para consumir os dados do SQL Server.
+* **Orquestração:**
+    * **Databricks Workflows:** Orquestrador nativo para automatizar a execução dos notebooks.
+    * **Apache Airflow (com Docker):** Utilizado na fase de desenvolvimento local para orquestração dos scripts Python.
 
-Deploy Your Project to Astronomer
-=================================
+## ✨ Funcionalidades
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://www.astronomer.io/docs/astro/deploy-code/
+* **Pipeline ETL Completo:** Implementação de um pipeline de dados end-to-end, da extração à visualização.
+* **Arquitetura Medalhão:** Organização dos dados em camadas Bronze (brutos), Silver (limpos) e Gold (agregados), garantindo qualidade e governança.
+* **Data Lakehouse:** Uso do Delta Lake sobre o ADLS para combinar a flexibilidade de um Data Lake com a confiabilidade de um Data Warehouse.
+* **Dashboard Interativo:** Uma aplicação web construída com Streamlit que permite filtrar e analisar os dados de Kdramas por ano, gênero, e popularidade.
+* **Gerenciamento de Segredos:** Configuração segura de credenciais utilizando Azure Key Vault e Databricks Secrets.
+* **Deploy na Web:** Implantação da aplicação Streamlit na nuvem (Render.com) usando Docker para um ambiente consistente e reproduzível.
 
-Contact
-=======
+## 🗂️ Estrutura do Projeto
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+```
+kdrama_analytics_project/
+├── kdrama_dashboard/         # Projeto da aplicação Streamlit
+│   ├── .streamlit/
+│   │   └── secrets.toml.example  # Exemplo do arquivo de segredos
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── app.py
+├── dags/                     # (Opcional) DAGs do Airflow para desenvolvimento local
+├── notebooks/                # Notebooks do Databricks (Bronze, Silver, Gold)
+├── src/                      # (Opcional) Scripts Python originais para desenvolvimento local
+└── README.md
+```
+
+## 🚀 Como Executar o Dashboard (Localmente)
+
+1.  **Pré-requisitos:**
+    * Python 3.9+
+    * Conta no Azure com os recursos do projeto devidamente configurados (ADLS, SQL DB, Key Vault, Databricks).
+    * Pipeline de dados no Databricks já executado para popular a camada Gold no SQL Server.
+    * Microsoft ODBC Driver for SQL Server instalado na sua máquina.
+
+2.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/](https://github.com/)[seu-usuario]/[seu-repositorio].git
+    cd [seu-repositorio]/kdrama_dashboard
+    ```
+
+3.  **Crie e ative um ambiente virtual:**
+    ```bash
+    python -m venv venv
+    # Windows
+    venv\Scripts\activate
+    # macOS/Linux
+    source venv/bin/activate
+    ```
+
+4.  **Instale as dependências:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+5.  **Configure suas credenciais:**
+    * Crie uma pasta `.streamlit` dentro de `kdrama_dashboard`.
+    * Dentro dela, crie um arquivo `secrets.toml` com suas credenciais do Banco de Dados SQL do Azure. **Este arquivo não deve ser enviado para o Git.**
+    ```toml
+    # .streamlit/secrets.toml
+    [database]
+    server = "seu_servidor_sql.database.windows.net"
+    database = "seu_banco_de_dados"
+    username = "seu_usuario"
+    password = "sua_senha"
+    driver = "ODBC Driver 18 for SQL Server"
+    ```
+
+6.  **Execute a aplicação:**
+    ```bash
+    streamlit run app.py
+    ```
+    Seu navegador abrirá automaticamente com o dashboard!
+
+## 📈 Melhorias Futuras
+
+* [ ] Agendar a execução do pipeline no Azure com Databricks Workflows para atualização diária.
+* [ ] Implementar testes de qualidade de dados com Great Expectations ou `dbt tests`.
+* [ ] Adicionar mais visualizações e análises ao dashboard.
+* [ ] Criar um pipeline de CI/CD com GitHub Actions para automatizar o deploy do dashboard.
+
+## ✍️ Autor
+
+* **[Seu Nome]**
+* LinkedIn: `[Link para seu Linkedin]`
+* GitHub: `[Link para seu GitHub]`
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
