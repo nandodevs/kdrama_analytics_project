@@ -13,7 +13,7 @@ O resultado final é um dashboard interativo, construído com Streamlit e implan
 
 A solução foi implementada seguindo a arquitetura Medalhão (Bronze, Silver, Gold), garantindo a qualidade, governança e rastreabilidade dos dados em cada etapa do processo.
 
-"imagem"
+![Arquitetura do Projeto](https://raw.githubusercontent.com/nandodevs/kdrama_analytics_project/refs/heads/master/docs/imgs/arquitetura.png)
 
 
 ## 🛠️ Tecnologias Utilizadas
