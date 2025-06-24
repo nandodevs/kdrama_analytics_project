@@ -117,12 +117,6 @@ kdrama_analytics_project/
 * [ ] Adicionar mais visualizações e análises ao dashboard.
 * [ ] Criar um pipeline de CI/CD com GitHub Actions para automatizar o deploy do dashboard.
 
-## ✍️ Autor
-
-* **[Seu Nome]**
-* LinkedIn: `[Link para seu Linkedin]`
-* GitHub: `[Link para seu GitHub]`
-
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
